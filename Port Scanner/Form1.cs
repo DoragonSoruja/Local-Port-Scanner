@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -7,18 +8,20 @@ namespace Port_Scanner
 {
     public partial class portScanner : Form
     {
+        private static ManualResetEvent connectDone = new ManualResetEvent(false);
+
         public portScanner()
         {
             InitializeComponent();
         }
 
-        private void newScan_Click(object sender, EventArgs e)
+        private void newScan_Click(object sender, EventArgs eventArgs)
         {
             Cursor = Cursors.WaitCursor;
-
+        
             if(inputIP.Text.Trim() == "")
             {
-                Cursor = Cursors.Default;
+                Cursor = Cursors.Default;   
                 MessageBox.Show("Enter in a valid IP address");
                 return;
             }
@@ -26,25 +29,24 @@ namespace Port_Scanner
             long ip;
             Int64.TryParse(inputIP.Text, out ip);
             // Scan Ports
-            TcpClient client = new TcpClient();
-            IPAddress host = new IPAddress(ip);
+            IPAddress ipAddress = new IPAddress(ip);
 
-            client.BeginConnect(host, 80, new AsyncCallback(ConnectCallback), client);
+            try
+            {
+                TcpListener tcpListener = new TcpListener(ipAddress, 80);
+                tcpListener.Start(0);
 
+                TcpClient client = tcpListener.AcceptTcpClient();
+                client.Close();
+
+                tcpListener.Stop();
+            }
+            catch (Exception e)
+            {
+                resultBox.Text += e.ToString();
+            }
 
             Cursor = Cursors.Default;
-        }
-
-        static void ConnectCallback(IAsyncResult result)
-        {
-            if(result.IsCompleted)
-            {
-                Console.WriteLine("Test Worked"); 
-            }
-            else
-            {
-                Console.WriteLine("Test Failed");
-            }
         }
     }
 }
