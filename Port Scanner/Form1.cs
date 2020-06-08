@@ -26,27 +26,58 @@ namespace Port_Scanner
                 return;
             }
 
-            long ip;
-            Int64.TryParse(inputIP.Text, out ip);
-            // Scan Ports
-            IPAddress ipAddress = new IPAddress(ip);
+            int firstPort = int.Parse(port1.Text);
 
             try
             {
-                TcpListener tcpListener = new TcpListener(ipAddress, 80);
-                tcpListener.Start(0);
+                using (var client = new TcpClient())
+                {
+                    if (singlePorting.Checked)
+                    {
+                        client.Connect(inputIP.Text.ToString(), firstPort);
+                        resultBox.Text += ("Port " + port1.Text + " is Open\n" + Environment.NewLine);
+                    }
+                    else
+                    {
+                        for(int x = firstPort; x <= int.Parse(port2.Text); x++)
+                        {
+                            try
+                            {
+                                using (var secondClient = new TcpClient())
+                                {
 
-                TcpClient client = tcpListener.AcceptTcpClient();
-                client.Close();
-
-                tcpListener.Stop();
+                                    client.Connect(inputIP.Text.ToString(), x);
+                                    resultBox.Text += ("Port " + port1.Text + " is Open\n" + Environment.NewLine);
+                                }
+                            }
+                            catch(Exception e)
+                            {
+                                resultBox.Text += "Port " + x.ToString() + " is Closed\n" + Environment.NewLine;
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
-                resultBox.Text += e.ToString();
+                resultBox.Text += "Port Closed\n" + Environment.NewLine;
             }
 
             Cursor = Cursors.Default;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(singlePorting.Checked)
+            {
+                label3.Visible = false;
+                port2.Visible = false;
+            }
+            else
+            {
+                label3.Visible = true;
+                port2.Visible = true;
+            }
         }
     }
 }
