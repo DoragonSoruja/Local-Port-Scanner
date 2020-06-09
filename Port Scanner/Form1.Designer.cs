@@ -37,6 +37,7 @@
             this.port2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.singlePorting = new System.Windows.Forms.CheckBox();
+            this.scanProgress = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // inputIP
@@ -68,11 +69,14 @@
             // 
             // resultBox
             // 
+            this.resultBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.resultBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resultBox.Location = new System.Drawing.Point(28, 113);
             this.resultBox.Multiline = true;
             this.resultBox.Name = "resultBox";
+            this.resultBox.ReadOnly = true;
             this.resultBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.resultBox.Size = new System.Drawing.Size(322, 250);
+            this.resultBox.Size = new System.Drawing.Size(322, 259);
             this.resultBox.TabIndex = 3;
             // 
             // label2
@@ -123,11 +127,21 @@
             this.singlePorting.UseVisualStyleBackColor = true;
             this.singlePorting.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // scanProgress
+            // 
+            this.scanProgress.Location = new System.Drawing.Point(-2, 378);
+            this.scanProgress.Name = "scanProgress";
+            this.scanProgress.Size = new System.Drawing.Size(383, 23);
+            this.scanProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.scanProgress.TabIndex = 9;
+            this.scanProgress.Visible = false;
+            // 
             // portScanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(380, 388);
+            this.ClientSize = new System.Drawing.Size(376, 393);
+            this.Controls.Add(this.scanProgress);
             this.Controls.Add(this.singlePorting);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.port2);
@@ -137,6 +151,7 @@
             this.Controls.Add(this.newScan);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.inputIP);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.Name = "portScanner";
             this.Text = "Port Scanner";
@@ -156,6 +171,7 @@
         private System.Windows.Forms.TextBox port2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox singlePorting;
+        private System.Windows.Forms.ProgressBar scanProgress;
     }
 }
 
