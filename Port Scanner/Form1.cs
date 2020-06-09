@@ -54,7 +54,8 @@ namespace Port_Scanner
                         {
                             try
                             {
-                                client.Connect(inputIP.Text.ToString(), x);
+                                TcpClient secondClient = new TcpClient();
+                                secondClient.Connect(inputIP.Text.ToString(), x);
                                 resultBox.Text += ("Port " + x.ToString() + " is Open.\n" + Environment.NewLine + "-------------------------------" + Environment.NewLine);
                             }
                             catch (Exception)
