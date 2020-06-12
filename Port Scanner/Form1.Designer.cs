@@ -46,10 +46,14 @@
             // 
             // inputIP
             // 
+            this.inputIP.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.inputIP.Location = new System.Drawing.Point(58, 31);
             this.inputIP.Name = "inputIP";
             this.inputIP.Size = new System.Drawing.Size(213, 20);
             this.inputIP.TabIndex = 0;
+            this.inputIP.Text = "Ex: 192.168.1.1";
+            this.inputIP.Enter += new System.EventHandler(this.inputIP_Enter);
+            this.inputIP.Leave += new System.EventHandler(this.inputIP_Leave);
             // 
             // label1
             // 

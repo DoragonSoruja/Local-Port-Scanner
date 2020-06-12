@@ -3,6 +3,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Port_Scanner
 {
@@ -21,7 +22,7 @@ namespace Port_Scanner
             scanProgress.Visible = true;
             Cursor = Cursors.WaitCursor;
 
-            if(inputIP.Text.Trim() == "")
+            if (inputIP.Text.Trim() == "" || inputIP.Text == "Ex: 192.168.1.1")
             {
                 Cursor = Cursors.Default;   
                 MessageBox.Show("Enter in a valid IP address.");
@@ -104,6 +105,24 @@ namespace Port_Scanner
         private void deleteButton_Click(object sender, EventArgs e)
         {
             portList.Items.Clear();
+        }
+
+        private void inputIP_Enter(object sender, EventArgs e)
+        {
+            if(inputIP.Text == "Ex: 192.168.1.1")
+            {
+                inputIP.Text = "";
+                inputIP.ForeColor = Color.Black;
+            }
+        }
+
+        private void inputIP_Leave(object sender, EventArgs e)
+        {
+            if (inputIP.Text == "")
+            {
+                inputIP.Text = "Ex: 192.168.1.1";
+                inputIP.ForeColor = Color.Silver;
+            }
         }
     }
 }
