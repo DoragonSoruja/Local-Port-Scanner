@@ -15,12 +15,11 @@ namespace Port_Scanner
             InitializeComponent();
         }
 
-        private void newScan_Click(object sender, EventArgs eventArgs)
+        private void portScan(object sender, EventArgs eventArgs)
         {
             scanProgress.Value = 0;
             scanProgress.Visible = true;
             Cursor = Cursors.WaitCursor;
-            resultBox.Clear();
 
             if(inputIP.Text.Trim() == "")
             {
@@ -40,41 +39,40 @@ namespace Port_Scanner
 
             try
             {
-                using (var client = new TcpClient())
+                TcpClient client = new TcpClient();
+                if (singlePorting.Checked)
                 {
-                    if (singlePorting.Checked)
+                    client.Connect(inputIP.Text.ToString(), firstPort);
+                    portStatus(firstPort, true);
+                }
+                else
+                {
+                    int progress = 100 / (int.Parse(port2.Text) - firstPort);
+                    for(int x = firstPort; x <= int.Parse(port2.Text); x++)
                     {
-                        client.Connect(inputIP.Text.ToString(), firstPort);
-                        resultBox.Text += ("Port " + port1.Text + " is Open.\n" + Environment.NewLine + "-------------------------------" + Environment.NewLine);
-                    }
-                    else
-                    {
-                        int progress = 100 / (int.Parse(port2.Text) - firstPort);
-                        for(int x = firstPort; x <= int.Parse(port2.Text); x++)
+                        TcpClient secondClient = new TcpClient();
+                        var connect = secondClient.BeginConnect(inputIP.Text.ToString(), x, null, null);
+
+                        if(connect.AsyncWaitHandle.WaitOne(100))
                         {
-                            try
-                            {
-                                TcpClient secondClient = new TcpClient();
-                                secondClient.Connect(inputIP.Text.ToString(), x);
-                                resultBox.Text += ("Port " + x.ToString() + " is Open.\n" + Environment.NewLine + "-------------------------------" + Environment.NewLine);
-                            }
-                            catch (Exception)
-                            {
-                                resultBox.Text += "Port " + x.ToString() + " is Closed.\n" + Environment.NewLine + "-------------------------------" + Environment.NewLine;
-                            }
-                            scanProgress.Value += progress;
+                            portStatus(x, true);
                         }
+                        else
+                        {
+                            portStatus(x, false);
+                        }
+                        scanProgress.Value += progress;
                     }
                 }
             }
             catch (Exception)
             {
-                if (singlePorting.Checked) { resultBox.Text += "Port " + firstPort.ToString() + " is Closed.\n" + Environment.NewLine + "-------------------------------" + Environment.NewLine; }
+                if (singlePorting.Checked) { portStatus(firstPort, false); }
             }
 
-            scanProgress.Value = 100;
-            Cursor = Cursors.Default;
-            scanProgress.Visible = false;
+        scanProgress.Value = 100;
+        Cursor = Cursors.Default;
+        //scanProgress.Visible = false;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -89,6 +87,23 @@ namespace Port_Scanner
                 label3.Visible = true;
                 port2.Visible = true;
             }
+        }
+
+        private void portStatus(int portNum, bool opened)
+        {
+            if(opened)
+            {
+                portList.Items.Add(new ListViewItem(new string[] { portNum.ToString(), "Open"}));
+            }
+            else
+            {
+                portList.Items.Add(new ListViewItem(new string[] { portNum.ToString(), "Closed" }));
+            }
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            portList.Items.Clear();
         }
     }
 }
