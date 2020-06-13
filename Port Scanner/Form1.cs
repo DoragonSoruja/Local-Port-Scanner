@@ -21,6 +21,7 @@ namespace Port_Scanner
             scanProgress.Value = 0;
             scanProgress.Visible = true;
             Cursor = Cursors.WaitCursor;
+            portList.Items.Clear();
 
             if (inputIP.Text.Trim() == "" || inputIP.Text == "Ex: 192.168.1.1")
             {
@@ -100,11 +101,6 @@ namespace Port_Scanner
             {
                 portList.Items.Add(new ListViewItem(new string[] { portNum.ToString(), "Closed" }));
             }
-        }
-
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-            portList.Items.Clear();
         }
 
         private void inputIP_Enter(object sender, EventArgs e)
